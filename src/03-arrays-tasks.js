@@ -257,10 +257,7 @@ function getMovingSum(arr) {
  * [ "a" ] => []
  */
 function getSecondItems(arr) {
-  return arr.reduce((acc, rec, index) => {
-    if (index % 2 !== 0) acc.push(rec);
-    return acc;
-  }, []);
+  return arr.filter((item, index) => index % 2);
 }
 
 
