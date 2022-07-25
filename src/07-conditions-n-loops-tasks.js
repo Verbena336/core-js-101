@@ -91,8 +91,7 @@ function getSumBetweenNumbers(n1, n2) {
  *   10,10,10 =>  true
  */
 function isTriangle(a, b, c) {
-  if (a + b <= c || a + c <= b || b + c <= a) return false;
-  return true;
+  return a + b > c && a + c > b && b + c > a;
 }
 
 
@@ -129,9 +128,7 @@ function isTriangle(a, b, c) {
  *
  */
 function doRectanglesOverlap(rect1, rect2) {
-  if (rect1.left > rect2.width || rect1.width < rect2.left
-    || rect1.top > rect2.height || rect1.height < rect2.top) return false;
-  return true;
+  return !(rect1.width < rect2.left || rect1.height < rect2.top);
 }
 
 
@@ -179,13 +176,12 @@ function isInsideCircle(circle, point) {
  *   'entente' => null
  */
 function findFirstSingleChar(str) {
-  const res = [];
   for (let i = 0; i < str.length; i += 1) {
     if (str.indexOf(str[i]) === str.lastIndexOf(str[i])) {
-      res.push(str[i]);
+      return str[i];
     }
   }
-  return res[0];
+  return null;
 }
 
 
@@ -286,8 +282,21 @@ function reverseInteger(num) {
  *   5436468789016589 => false
  *   4916123456789012 => false
  */
-function isCreditCardNumber(/* ccn */) {
-  throw new Error('Not implemented');
+function isCreditCardNumber(ccn) {
+  const arr = ccn.toString().split('');
+  let sum = 0;
+  const parity = (arr.length - 2) % 2;
+  for (let i = 0; i <= arr.length - 1; i += 1) {
+    let digit = parseInt(arr[i], 10);
+    if (i % 2 === parity) {
+      digit *= 2;
+    }
+    if (digit > 9) {
+      digit -= 9;
+    }
+    sum += digit;
+  }
+  return sum % 10 === 0;
 }
 
 /**
@@ -427,8 +436,17 @@ function getCommonDirectoryPath(pathes) {
  *                         [ 6 ]]
  *
  */
-function getMatrixProduct(/* m1, m2 */) {
-  throw new Error('Not implemented');
+function getMatrixProduct(m1, m2) {
+  const res = [];
+  for (let i = 0; i < m1.length; i += 1) res[i] = [];
+  for (let k = 0; k < m2[0].length; k += 1) {
+    for (let i = 0; i < m1.length; i += 1) {
+      let temp = 0;
+      for (let j = 0; j < m2.length; j += 1) temp += m1[i][j] * m2[j][k];
+      res[i][k] = temp;
+    }
+  }
+  return res;
 }
 
 
@@ -463,44 +481,17 @@ function getMatrixProduct(/* m1, m2 */) {
  *
  */
 function evaluateTicTacToePosition(position) {
-  let winner;
   for (let i = 0; i < position.length; i += 1) {
-    if (position.every((item) => item[i] === 'X')) {
-      winner = 'X';
-      return winner;
-    }
-    if (position.every((item) => item[i] === '0')) {
-      winner = '0';
-      return winner;
-    }
-    for (let j = 0; j < position[i].length; j += 1) {
-      if (position[j].filter((item) => item === 'X').length === 3) {
-        winner = 'X';
-        return winner;
-      }
-      if (position[j].filter((item) => item === '0').length === 3) {
-        winner = '0';
-        return winner;
-      }
-      if (position[0][0] === 'X' && position[1][1] === 'X' && position[2][2] === 'X') {
-        winner = 'X';
-        return winner;
-      }
-      if (position[0][0] === '0' && position[1][1] === '0' && position[2][2] === '0') {
-        winner = '0';
-        return winner;
-      }
-      if (position[0][2] === 'X' && position[1][1] === 'X' && position[2][0] === 'X') {
-        winner = 'X';
-        return winner;
-      }
-      if (position[0][2] === '0' && position[1][1] === '0' && position[2][0] === '0') {
-        winner = '0';
-        return winner;
-      }
-    }
+    if (position.every((item) => item[i] === 'X')) return 'X';
+    if (position.every((item) => item[i] === '0')) return '0';
+    if (position[i].filter((item) => item === 'X').length === 3) return 'X';
+    if (position[i].filter((item) => item === '0').length === 3) return '0';
+    if (position[0][0] === 'X' && position[1][1] === 'X' && position[2][2] === 'X') return 'X';
+    if (position[0][0] === '0' && position[1][1] === '0' && position[2][2] === '0') return '0';
+    if (position[0][2] === 'X' && position[1][1] === 'X' && position[2][0] === 'X') return 'X';
+    if (position[0][2] === '0' && position[1][1] === '0' && position[2][0] === '0') return '0';
   }
-  return winner;
+  return undefined;
 }
 
 
